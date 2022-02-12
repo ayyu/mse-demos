@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MSE WebM test</title>
+  </head>
+  <body>
+    <video id="webmStream" controls=""></video>
+	  <script>
+      let streamVideo = document.getElementById("webmStream");
+
+      let mediaSource = new MediaSource();
+
+      let streamSource = URL.createObjectURL(mediaSource);
+      streamVideo.src = streamSource;
+
+      mediaSource.addEventListener("sourceopen", () => {
+        let audioBuffer = mediaSource.addSourceBuffer(`audio/webm; codecs="opus"`);
+        let videoBuffer = mediaSource.addSourceBuffer(`video/webm; codecs="vp9"`);
+        fetch('/audio')
+          .then(res => res.arrayBuffer())
+          .then(data => audioBuffer.appendBuffer(data));
+        fetch('/video')
+          .then(res => res.arrayBuffer())
+          .then(data => videoBuffer.appendBuffer(data));
+      });
+    </script>
+  </body>
+</html>
