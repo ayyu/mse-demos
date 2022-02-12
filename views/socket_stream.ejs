@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MSE WebM test</title>
+  </head>
+  <body>
+    <video id="webmStream" controls=""></video>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/socket.io-stream.js"></script>
+	  <script>
+      const socket = io();
+
+      const streamVideo = document.getElementById("webmStream");
+      const mediaSource = new MediaSource();
+      const streamSource = URL.createObjectURL(mediaSource);
+      streamVideo.src = streamSource;
+
+      const audioMIME = `audio/webm; codecs="opus"`;
+
+      mediaSource.addEventListener("sourceopen", () => {
+        const audioBuffer = mediaSource.addSourceBuffer(audioMIME);
+        const audioData = [];
+
+        socket.on('audio-data', (data) => {
+          if (!audioBuffer.updating && !audioData.length) {
+            audioBuffer.appendBuffer(data);
+          } else {
+            audioData.push(data);
+          }
+        });
+
+        audioBuffer.addEventListener('updateend', () => {
+          if (audioData.length) audioBuffer.appendBuffer(audioData.shift());
+        });
+      });
+    </script>
+  </body>
+</html>

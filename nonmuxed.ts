@@ -6,14 +6,14 @@ import path from "path";
 const app = express();
 
 app.set('view engine', 'ejs');
-app.set('views', './demos/buffering/views');
+app.set('views', './views');
 
 app.use(express.static('views'));
 
 const server = http.createServer(app);
 
 app.get('/', (_req, res) => {
-	res.render('./client.ejs');
+	res.render('./nonmuxed.ejs');
 });
 
 app.get('/audio', (req, res) => {
