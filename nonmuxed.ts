@@ -1,6 +1,6 @@
 import express from "express";
 import http from "http";
-import fs, { ReadStream } from "fs";
+import fs from "fs";
 import path from "path";
 
 const app = express();
@@ -16,9 +16,9 @@ app.get('/', (_req, res) => {
 	res.render('./nonmuxed.ejs');
 });
 
-app.get('/audio', (req, res) => {
+app.get('/audio', (_req, res) => {
 	let file = path.resolve(__dirname, './media/audio.webm');
-	let stream: ReadStream = fs.createReadStream(file);
+	let stream: fs.ReadStream = fs.createReadStream(file);
 	res.writeHead(206, {
 		'Connection': 'close',
 		'Accept-Ranges': 'bytes',
@@ -27,9 +27,9 @@ app.get('/audio', (req, res) => {
 	stream.pipe(res);
 });
 
-app.get('/video', (req, res) => {
+app.get('/video', (_req, res) => {
 	let file = path.resolve(__dirname, './media/video.webm');
-	let stream: ReadStream = fs.createReadStream(file, {
+	let stream: fs.ReadStream = fs.createReadStream(file, {
 		end: 1000000,
 	});
 	res.writeHead(206, {

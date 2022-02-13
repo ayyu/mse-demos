@@ -9,31 +9,45 @@
   <body>
     <video id="webmStream" controls=""></video>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="/socket.io-stream.js"></script>
-	  <script>
+    <script>
       const socket = io();
-
+      
       const streamVideo = document.getElementById("webmStream");
       const mediaSource = new MediaSource();
       const streamSource = URL.createObjectURL(mediaSource);
       streamVideo.src = streamSource;
 
-      const audioMIME = `audio/webm; codecs="opus"`;
+      const audioMime = `audio/webm; codecs="opus"`;
+      const videoMime = `video/webm; codecs="vp9"`;
 
       mediaSource.addEventListener("sourceopen", () => {
-        const audioBuffer = mediaSource.addSourceBuffer(audioMIME);
-        const audioData = [];
+        const audioBuffer = mediaSource.addSourceBuffer(audioMime);
+        const videoBuffer = mediaSource.addSourceBuffer(videoMime);
+        const audioChunks = [];
+        const videoChunks = [];
 
-        socket.on('audio-data', (data) => {
-          if (!audioBuffer.updating && !audioData.length) {
-            audioBuffer.appendBuffer(data);
+        socket.on("audio-data", (chunk) => {
+          if (!audioBuffer.updating && !audioChunks.length) {
+            audioBuffer.appendBuffer(chunk);
           } else {
-            audioData.push(data);
+            audioChunks.push(chunk);
           }
         });
 
-        audioBuffer.addEventListener('updateend', () => {
-          if (audioData.length) audioBuffer.appendBuffer(audioData.shift());
+        socket.on("video-data", (chunk) => {
+          if (!videoBuffer.updating && !videoChunks.length) {
+            videoBuffer.appendBuffer(chunk);
+          } else {
+            videoChunks.push(chunk);
+          }
+        });
+
+        audioBuffer.addEventListener("updateend", () => {
+          if (audioChunks.length) audioBuffer.appendBuffer(audioChunks.shift());
+        });
+
+        videoBuffer.addEventListener("updateend", () => {
+          if (videoChunks.length) videoBuffer.appendBuffer(videoChunks.shift());
         });
       });
     </script>

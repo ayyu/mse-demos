@@ -19,6 +19,7 @@
 	},
 	"homepage": "https://github.com/ayyu/mse-demos#readme",
 	"devDependencies": {
+		"@types/ebml": "^3.0.2",
 		"@types/express": "^4.17.13",
 		"@types/node": "^17.0.17",
 		"@types/ws": "^8.2.2",
@@ -33,10 +34,11 @@
 	},
 	"dependencies": {
 		"@prisma/client": "^3.9.2",
+		"ebml": "^3.0.0",
+		"ebml-stream": "^1.0.3",
 		"express": "^4.17.2",
 		"https": "^1.0.0",
 		"node.js": "^0.0.1-security",
-		"socket.io": "^4.4.1",
-		"socket.io-stream": "^0.9.1"
+		"socket.io": "^4.4.1"
 	}
 }

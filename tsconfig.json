@@ -1,13 +1,14 @@
 {
 	"compilerOptions": {
+		"target": "es6",
 		"module": "CommonJS",
 		"esModuleInterop": true,
+		"resolveJsonModule": true,
 		"declaration": true,
-		"target": "es6",
-		"moduleResolution": "node",
-		"types": ["node"],
 		"strict": true,
 		"sourceMap": true,
+		"moduleResolution": "node",
+		"types": ["node"],
 		"outDir": "./dist"
 	},
 	"include": ["./**/*.ts"],
