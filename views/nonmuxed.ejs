@@ -9,16 +9,13 @@
   <body>
     <video id="webmStream" controls=""></video>
 	  <script>
-      let streamVideo = document.getElementById("webmStream");
-
-      let mediaSource = new MediaSource();
-
-      let streamSource = URL.createObjectURL(mediaSource);
-      streamVideo.src = streamSource;
+      const streamVideo = document.getElementById("webmStream");
+      const mediaSource = new MediaSource();
+      streamVideo.src = URL.createObjectURL(mediaSource);
 
       mediaSource.addEventListener("sourceopen", () => {
-        let audioBuffer = mediaSource.addSourceBuffer(`audio/webm; codecs="opus"`);
-        let videoBuffer = mediaSource.addSourceBuffer(`video/webm; codecs="vp9"`);
+        const audioBuffer = mediaSource.addSourceBuffer(`audio/webm; codecs="opus"`);
+        const videoBuffer = mediaSource.addSourceBuffer(`video/webm; codecs="vp9"`);
         fetch('/audio')
           .then(res => res.arrayBuffer())
           .then(data => audioBuffer.appendBuffer(data));
